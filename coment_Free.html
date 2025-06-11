@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>作品一覧</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+      background-color: #f0f0f0;
+    }
+    .artwork {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    h2 {
+      margin: 0 0 0.5rem 0;
+      font-size: 1.5rem;
+    }
+    p {
+      line-height: 1.6;
+      margin: 0.3rem 0;
+    }
+    .feedback-link {
+      margin-top: 1rem;
+      display: inline-block;
+      text-decoration: none;
+      color: white;
+      background-color: #0078d4;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: bold;
+    }
+    .feedback-link:hover {
+      background-color: #005fa3;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="text-align: center;">自由作品コメント</h1>
+  <div id="gallery"></div>
+
+  <script>
+    // 作品データの配列（必要なだけ追加できます）
+    const artworks = [
+      {
+        title: "大分県景色",
+        camera: "",
+        comment: "素敵な一枚になっています！"
+      },
+      {
+        title: "旅",
+        camera: "",
+        comment: ""
+      },
+      {
+        title: "2月",
+        camera:"iPhone 12 mini",
+        comment:"冬の湖岸。",
+      },
+      {
+        title:"聖地巡礼",
+        camera:"",
+        comment:"",
+      },
+      {
+        title: "神輿",
+        camera: "",
+        comment: ""
+      },
+      {
+        title: "翠線",
+        camera: "",
+        comment: ""
+      },
+      {
+        title: "鐘",
+        camera: "スマホ",
+        comment: "万博記念公園にあった風景をとりました"
+      },
+      {
+        title: "SDGsな鯉のぼり",
+        camera: "canon EOS8000D",
+        comment: "鯉のぼりをよーく見るとSDGsの目標が書かれています。"
+      },
+      {
+        title: "駆ける",
+        camera: "Nikonz50II",
+        comment: "駆け寄る姿が可愛くて好きな写真です"
+      },
+      {
+        title: "幸せ",
+        camera: "Canon EOS 9000D",
+        comment: "おやつのゼリーを幸せそうに食べているところ"
+      },
+      {
+        title: "”ヤツ”が来た！",
+        camera: "Nikon Z8, NIKKOR Z 600mm f/6.3 VR S",
+        comment: "3月末に与那国島に行きました。\n 一番の狙いだったヤツガシラが撮れてHappy！"
+      },
+      {
+        title: "凛として",
+        camera: "Canon EOS Kiss X10i",
+        comment: "ChatGPT大先生によると、この花はシャクヤクという花らしいです。知らんけど"
+      },
+      {
+        title: "花々の祝福",
+        camera: "Canon EOS RP",
+        comment: "「頑張っている人々が、この幻想的な景色を見て、幸せな気持ちになれたら――」そんな想いがコスモスたちから伝わってくるようで、この作品名をつけました。"
+      },
+      {
+        title: "若葉色トンネル",
+        camera: "iPhone",
+        comment: "葉の間から光がトンネルのように差しているところを撮影しました。若葉色は初夏を感じる明るい緑色です。"
+      },
+      {
+        title: "ラコリーナ",
+        camera: "FUJIFILM X-S10",
+        comment: "バームクーヘン美味しかった。"
+      },
+      {
+        title: "見慣れた季節",
+        camera: "iPhone16e",
+        comment: "春の始まり、見慣れた季節の風景を収めた一枚です。"
+      },
+      {
+        title: "光明",
+        camera: "",
+        comment: ""
+      },
+      {
+        title: "二面性",
+        camera: "SONYα7IV",
+        comment: "昼では淡くて可愛い花も夜では気高く綺麗なものとなる様を二面性と言い表しました"
+      },
+      {
+        title: "静寂",
+        camera: "SONY α7R",
+        comment: "足立美術館の日本庭園での1枚。見るだけで涼しげで心が静まるような、そんな雰囲気を感じていただければと思います。"
+      },
+      {
+        title: "Touchdown",
+        camera: "Nikon Z6",
+        comment: "頭上をかすめる旅客機は迫力満点でした。"
+      },
+      {
+        title: "Nordic Circle",
+        camera: "SONYα7R4",
+        comment: "大阪・関西万博の北欧館で撮影しました"
+      },
+      {
+        title: "蒼黒の大輪",
+        camera: "LUMIX G99M2",
+        comment: "ライトアップされた観覧車が綺麗でした。"
+      },
+      {
+        title: "かがり火",
+        camera: "",
+        comment: ""
+      },
+      {
+        title: "夜の世界",
+        camera: "",
+        comment: "夜だけ見れる1枚です"
+      },
+      {
+        title: "時の旅人",
+        camera: "",
+        comment: ""
+      },
+      
+    ];
+
+    // 共通の感想フォームURL
+    const feedbackURL = "https://example.com/feedback-form"; // ←ここを実際のURLに差し替えてください
+
+    const gallery = document.getElementById("gallery");
+
+    artworks.forEach((art) => {
+      const artDiv = document.createElement("div");
+      artDiv.className = "artwork";
+
+      artDiv.innerHTML = `
+        <h2>${art.title}</h2>
+        <p><strong>使用したカメラ:</strong> ${art.camera}</p>
+        <p><strong>コメント:</strong> ${art.comment}</p>
+        <a class="feedback-link" href="${feedbackURL}" target="_blank">感想はこちらから！(会場内共通)</a>
+      `;
+
+      gallery.appendChild(artDiv);
+    });
+  </script>
+</body>
+</html>
